@@ -1,11 +1,14 @@
 import express, { Request, Response } from 'express';
+import { PostController } from './controllers/post.controller';
 
 class Server {
+    private postController: PostController;
     public app: express.Application;
 
     constructor() {
         this.app = express();
         this.configuration();
+        this.postController = new PostController();
         this.routes();
     }
 
@@ -14,6 +17,7 @@ class Server {
     }
 
     public routes() {
+        this.app.use('/api/posts', this.postController.router);
         this.app.get('/', (req: Request, res: Response) => {
             res.send('Hello World!');
         });
@@ -25,3 +29,6 @@ class Server {
         });
     }
 }
+
+const server = new Server();
+server.start();
