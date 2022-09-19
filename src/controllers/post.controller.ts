@@ -8,52 +8,50 @@ export class PostController {
         this.routes();
     }
 
-    public getAllPosts = async (req: Request, res: Response) => {
+    public getAllPosts = async (req: Request, res: Response, next: Function) => {
         PostRepository.find().then(posts => {
             res.send(posts);
         }).catch(error => {
-            res.status(500).send(error);
+            next(error);
         });
     }
 
-    public getPostById = async (req: Request, res: Response) => {
+    public getPostById = async (req: Request, res: Response, next: Function) => {
         PostRepository.findOneBy({ id: Number(req.params.id) }).then(post => {
             if (!post) throw new Error("Post not found");
             res.send(post);
         }).catch(error => {
-            res.status(500).json(error.message);
+            next(error);
         });
     }
 
-    public createPost = async (req: Request, res: Response) => {
-        console.log(req.body);
-        const newPost = await PostRepository.create(req.body)
+    public createPost = async (req: Request, res: Response, next: Function) => {
+        const newPost = PostRepository.create(req.body)
         PostRepository.save(newPost).then(results => {
             res.send(results);
         }).catch(error => {
-            res.status(500).send(error);
+            next(error);
         });
     }
 
-    public updatePost = async (req: Request, res: Response) => {
-        const post = await PostRepository.findOneBy({ id: Number(req.params.id) });
-        if (!post) {
-            res.status(404).send("Post not found");
-            return;
-        }
-        PostRepository.merge(post, req.body);
-        PostRepository.save(post).then(results => {
+    public updatePost = async (req: Request, res: Response, next: Function) => {
+        PostRepository.findOneBy({ id: Number(req.params.id) }).then(post => {
+            if (!post) throw new Error("Post not found");
+            PostRepository.merge(post, req.body);
+            return PostRepository.save(post)
+        }).then(results => {
             res.send(results);
         }).catch(error => {
-            res.status(500).send(error);
+            next(error);
         });
     }
 
-    public deletePost(req: Request, res: Response) {
+    public deletePost = async (req: Request, res: Response, next: Function) => {
         PostRepository.delete(req.params.id).then(results => {
+            if (results.affected === 0) throw new Error("Post not found");
             res.send(results);
         }).catch(error => {
-            res.status(500).send(error);
+            next(error);
         });
     }
 

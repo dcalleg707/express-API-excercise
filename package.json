@@ -6,9 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "tsc ",
-    "migrate:create": "ts-node-dev ./node_modules/typeorm/cli.js migration:create -n",
-    "migrate: up": "ts-node-dev ./node_modules/typeorm/cli.js migration:run",
-    "migrate: down": "ts-node-dev ./node_modules/typeorm/cli.js migration:revert"
+    "start" : "node build/server.js"
   },
   "author": "",
   "license": "ISC",
