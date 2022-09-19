@@ -28,7 +28,7 @@ export class PostController {
     public createPost = async (req: Request, res: Response, next: Function) => {
         const newPost = PostRepository.create(req.body)
         PostRepository.save(newPost).then(results => {
-            res.send(results);
+            res.status(201).send(results);
         }).catch(error => {
             next(error);
         });
