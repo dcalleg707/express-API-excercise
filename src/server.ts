@@ -1,5 +1,9 @@
+import "reflect-metadata";
 import express, { Request, Response } from 'express';
 import { PostController } from './controllers/post.controller';
+import bodyParser from "body-parser";
+import AppDataSource from './data-source';
+require("dotenv").config();
 
 class Server {
     private postController: PostController;
@@ -10,17 +14,20 @@ class Server {
         this.configuration();
         this.postController = new PostController();
         this.routes();
+        AppDataSource.initialize().then(() => {
+            console.log("Connected to database");
+        }).catch((error) => {
+            console.log("Error during dataSource initialization", error);
+        });
     }
 
     public configuration() {
-        this.app.set('port', process.env.PORT || 3000);
+        this.app.set('port', process.env.PORT || 3001);
+        this.app.use(bodyParser.json());
     }
 
-    public routes() {
+    public async routes() {
         this.app.use('/api/posts', this.postController.router);
-        this.app.get('/', (req: Request, res: Response) => {
-            res.send('Hello World!');
-        });
     }
 
     public start() {
