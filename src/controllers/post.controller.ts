@@ -63,6 +63,5 @@ export class PostController {
         this.router.post("/", this.createPost);
         this.router.put("/:id", this.updatePost);
         this.router.delete("/:id", this.deletePost);
-
     }
 }

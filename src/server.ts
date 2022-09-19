@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import express, { Request, Response } from 'express';
+import express from 'express';
 import { PostController } from './controllers/post.controller';
 import bodyParser from "body-parser";
 import AppDataSource from './data-source';
